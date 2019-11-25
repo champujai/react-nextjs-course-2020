@@ -6,6 +6,12 @@ import { useMember } from '@lib/auth'
 import DetailPageHeader from '@components/_common/DetailPageHeader'
 import SongList from '@common/SongList'
 
+import {useRouter} from 'next/router'
+import * as service from '@features/album/services'
+import {Fetch} from '@lib/api'
+
+
+
 AlbumDetailPage.defaultProps = {
   data: {
     title: 'KILL THIS LOVE',
@@ -47,23 +53,62 @@ AlbumDetailPage.defaultProps = {
   },
 }
 
+
+
+
 function AlbumDetailPage({ data }) {
+
+
   const { token } = useMember()
 
   if (token === null) {
     return null
   }
 
+  let param =useRouter()
+ 
+
+ 
+
+
   return (
     <Flex flexWrap="wrap" css={{ padding: '60px 120px' }}>
       <Box width={1 / 3}>
-        <DetailPageHeader data={data} />
+
+      <Fetch service={()=>service.getAlbumById(param.query.id,{token})}>
+         {({data}) =>  <DetailPageHeader data={data} />}
+      </Fetch>
+       
       </Box>
       <Box width={2 / 3}>
-        <SongList tracks={data.tracks} />
+      <Fetch service={()=>service.getAlbumById(param.query.id,{token})}>
+        {({data}) => <SongList tracks={data.tracks} />}
+      </Fetch>
       </Box>
     </Flex>
   )
 }
 
 export default withPage()(AlbumDetailPage)
+
+
+
+/*
+
+let xx={
+'title': item.name,
+'subTitle': item.label,
+'bottomLine': item.release_date+' '+ item.total_tracks + ' track',
+'image': item.images[0].url,
+'tracks': [
+  {
+    'name': item.tracks.items[0].name
+    'artist': item.tracks.items[0].artists[0].name,
+    'album': item.name,
+    'image':item.images[0].url,
+    'previewUrl':item.tracks.items[0].preview_url,
+    'durationMs': item.tracks.items[0].duration_ms,
+  },
+}
+
+*/

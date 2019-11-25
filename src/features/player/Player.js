@@ -1,10 +1,14 @@
 import React from 'react'
 import ReactPlayer from 'react-player'
+import playerStore from '@features/player/store'
 
-import PlayerStore from '@features/player/store'
+import {inject} from '@lib/store'
 
-function Player() {
-  const playerStore = new PlayerStore()
+export default inject('playerStore')(Player)
+
+
+function Player({playerStore}) {
+
   const { url, playing } = playerStore.nowPlaying
 
   return (
@@ -15,7 +19,7 @@ function Player() {
       progressInterval={50}
       volume={0.8}
       muted={false}
-      onProgress={data => console.log('onProgress', data)}
+      onProgress={data =>  null}
       onEnded={() => {
         console.log('onEnded')
       }}
@@ -23,4 +27,4 @@ function Player() {
   )
 }
 
-export default Player
+
