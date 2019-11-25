@@ -6,6 +6,12 @@ import withPage from '@lib/page/withPage'
 import DetailPageHeader from '@components/_common/DetailPageHeader'
 import SongList from '@common/SongList'
 
+import {useRouter} from 'next/router'
+import * as service from '@features/playlist/services'
+import {Fetch} from '@lib/api'
+
+
+
 PlaylistDetailPage.defaultProps = {
   data: {
     title: 'Main',
@@ -54,17 +60,28 @@ function PlaylistDetailPage({ data }) {
   if (token === null) {
     return null
   }
+  
+let param =useRouter()
 
-  return (
-    <Flex flexWrap="wrap" css={{ padding: '60px 120px' }}>
-      <Box width={1 / 3}>
-        <DetailPageHeader data={data} />
-      </Box>
-      <Box width={2 / 3}>
-        <SongList tracks={data.tracks} />
-      </Box>
-    </Flex>
-  )
+return (
+  <Flex flexWrap="wrap" css={{ padding: '60px 120px' }}>
+    <Box width={1 / 3}>
+
+    <Fetch service={()=>service.getPlaylistById(param.query.id,{token})}>
+       {({data}) =>  <DetailPageHeader data={data} />}
+    </Fetch>
+     
+    </Box>
+    <Box width={2 / 3}>
+    <Fetch service={()=>service.getPlaylistById(param.query.id,{token})}>
+      {({data}) => <SongList tracks={data.tracks} />}
+    </Fetch>
+    </Box>
+  </Flex>
+)
+
+
+
 }
 
 export default withPage({ restricted: true })(PlaylistDetailPage)

@@ -1,11 +1,16 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
 import { Flex, Box } from '@grid'
 
 import Link from '@link'
 import { useMember } from '@lib/auth'
 import withPage from '@lib/page/withPage'
 
+import * as service from '@features/playlist/services'
+import {Fetch} from '@lib/api'
+
+
 PlaylistListPage.defaultProps = {
+  
   items: [
     {
       id: '0773TCnunEbJ0sVNJpG5QY',
@@ -17,22 +22,59 @@ PlaylistListPage.defaultProps = {
           width: 640,
         },
       ],
-      name: 'Main',
+      name: 'Madin',
     },
   ],
 }
 
+
 function PlaylistListPage({ items }) {
+
+
+  let [playlist, setPlaylist] = useState({});
+
   const { token } = useMember()
 
   if (token === null) {
     return null
   }
 
+
+
+
+/*
+<Fetch service={()=>service.getMyPlaylist({token})}>
+{({data}) => {
+
+
+  data.map(playlist=>{
+    console.log(playlist)
+
+  })
+
+
+}}
+
+
+</Fetch>
+
+*/
+
   return (
+
+
+
     <Flex flexWrap="wrap" css={{ padding: '60px 120px' }}>
-      {items.map(playlist => (
-        <Box width={1 / 6} px={10} py={10} key={playlist.id}>
+     <Fetch service={()=>service.getMyPlaylist({token})}>
+
+     {({data}) => {
+      
+        
+       return data.map(playlist => {
+        
+        return (
+       
+       <Box width={1 / 6} px={10} py={10} key={playlist.id}>
           <article>
             <Link route="playlist-detail" params={{ id: playlist.id }}>
               <a>
@@ -53,7 +95,13 @@ function PlaylistListPage({ items }) {
             </h3>
           </article>
         </Box>
-      ))}
+      )})
+      
+      
+      }}
+
+          
+</Fetch>
     </Flex>
   )
 }
