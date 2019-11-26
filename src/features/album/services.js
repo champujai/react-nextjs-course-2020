@@ -2,7 +2,7 @@ import * as API from './repository'
 
 export function getNewReleases({ token, limit }) {
 
-
+  /**/ 
   return API.getNewReleases({ token, limit }).then((data) => {
 
       console.log(data)
