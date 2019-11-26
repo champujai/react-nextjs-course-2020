@@ -15,6 +15,9 @@ export default class PlayerStore {
   repeatState=0
 
   @observable
+  randomState=0
+
+  @observable
   currentSec=0
 
   nextPlaying = {
@@ -63,7 +66,7 @@ export default class PlayerStore {
   }
 
 
-  playCustom(){
+  playCustom(repeat){
 
     const { previewUrl, name, artist, image } = this.listPlaying[this.currentNumber]
     this.nowPlaying.playnumber =  this.currentNumber
@@ -71,7 +74,9 @@ export default class PlayerStore {
     this.nowPlaying.title = name
     this.nowPlaying.subTitle = artist
     this.nowPlaying.image = image
-    this.nowPlaying.url = previewUrl
+    
+    if(repeat==1) this.nowPlaying.url = `${previewUrl}#${Math.random()}`
+    else this.nowPlaying.url = previewUrl
 
   }
 
@@ -120,18 +125,39 @@ export default class PlayerStore {
     return this.repeatState
   }
 
+  @action
+  setRandom(){
+    if(this.randomState==0)  this.randomState=1
+    else this.randomState=0
+    console.log('Random state:', this.randomState)
+
+  }
+
+
+  @action
+  getRandom(){
+    return this.randomState
+  }
+
+ 
 
   @action
   autonext(){
 
-     if(this.repeatState==0){
-       this.next()
+     if(this.repeatState==1){
+      this.resetTime()
+      this.playCustom(1)
+      console.log('Repeat Number:', this.currentNumber)
+      console.log('Repeat Now Playing:', this.nowPlaying.title)
+
+     }else if(this.randomState==1){
+
+      this.randomplay()
+     
+
      }else{
 
-        this.resetTime()
-        this.playCustom()
-        console.log('Repeat Number:', this.currentNumber)
-        console.log('Repeat Now Playing:', this.nowPlaying.title)
+      this.next()
 
      }
   }

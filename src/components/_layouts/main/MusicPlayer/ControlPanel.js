@@ -39,9 +39,11 @@ function ControlPanel({ playerStore }) {
 
   let playbutton='play'
   let repeatbutton='redo-alt'
+  let randombutton='random'
   const { playing } = playerStore.nowPlaying
   let repeatmode=playerStore.repeatState
-
+  let randommode=playerStore.randomState;
+  
   if(playing){
      playbutton='play'
   }else{
@@ -49,19 +51,26 @@ function ControlPanel({ playerStore }) {
   }
   
   if(repeatmode==1){
-    repeatbutton='plus-circle'
+    repeatbutton='heart'
  }else{
   repeatbutton='redo-alt'
  }
- 
+
+ if(randommode==1){
+  randombutton='heart'
+}else{
+  randombutton='random'
+}
+
+
 
 
   return (
     <Flex>
       <Box>
-        <ButtonControl icon="random" active={false} onClick={() => {
+        <ButtonControl icon={randombutton} active={false} onClick={() => {
 
-              playerStore.randomplay()
+              playerStore.setRandom()
 
         }} />
       </Box>
@@ -75,14 +84,6 @@ function ControlPanel({ playerStore }) {
       <Box>
         <ButtonControl icon={playbutton} circle={true} onClick={() => {
 
-               /*
-let  playstate =playerStore.checkstate()
-               if(playstate){
-                 setPlaybutton('pause')
-                }else{
-                 setPlaybutton('play');
-                }
-                */
 
                playerStore.playtoggle()
 
