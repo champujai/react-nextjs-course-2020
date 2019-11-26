@@ -38,37 +38,35 @@ function ButtonControl({ icon, circle = false, active = false, onClick }) {
 function ControlPanel({ playerStore }) {
 
   let playbutton='play'
-  let repeatbutton='redo-alt'
-  let randombutton='random'
+  let repeatbutton=true
+  let randombutton=true
+  
   const { playing } = playerStore.nowPlaying
   let repeatmode=playerStore.repeatState
   let randommode=playerStore.randomState;
-  
-  if(playing){
-     playbutton='play'
+    
+    if(playing){
+      playbutton='play'
+    }else{
+      playbutton='pause'
+    }
+    
+    if(repeatmode==1){
+      repeatbutton=true
   }else{
-    playbutton='pause'
+      repeatbutton=false
   }
-  
-  if(repeatmode==1){
-    repeatbutton='heart'
- }else{
-  repeatbutton='redo-alt'
- }
 
- if(randommode==1){
-  randombutton='heart'
-}else{
-  randombutton='random'
-}
-
-
-
+  if(randommode==1){
+      randombutton=true
+  }else{
+      randombutton=false
+  }
 
   return (
     <Flex>
       <Box>
-        <ButtonControl icon={randombutton} active={false} onClick={() => {
+        <ButtonControl icon='random' active={randombutton} onClick={() => {
 
               playerStore.setRandom()
 
@@ -92,15 +90,15 @@ function ControlPanel({ playerStore }) {
       <Box>
         <ButtonControl icon="step-forward" onClick={() => {
 
-                  playerStore.next()
+                playerStore.next()
 
 
         }} />
       </Box>
       <Box>
-        <ButtonControl icon={repeatbutton} active={false} onClick={() => {
+        <ButtonControl icon='redo-alt' active={repeatbutton} onClick={() => {
 
-                   playerStore.setRepeat()
+                playerStore.setRepeat()
 
         }} />
       </Box>

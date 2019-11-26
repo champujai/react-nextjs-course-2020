@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useEffect} from 'react'
 import { Flex } from '@grid'
 import SongListItem from './SongListItem'
 
@@ -9,7 +9,10 @@ export default inject('playerStore')(SongList)
 
 function SongList({ tracks,playerStore }) {
 
-  playerStore.setPlaylist(tracks)
+  useEffect(()=>{
+    playerStore.setPlaylist(tracks)
+  }),([])
+ 
 
   return (
     <Flex

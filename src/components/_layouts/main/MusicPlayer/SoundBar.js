@@ -1,8 +1,19 @@
-import React, { forwardRef } from 'react'
+import React, { forwardRef,useEffect } from 'react'
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome'
 import { Flex, Box } from '@grid'
 import colors from '@features/_ui/colors'
 import Link from '@link'
+import playerStore from '@features/player/store'
+import { inject } from '@lib/store'
+export default inject('playerStore')(SoundBar)
+
+SoundBar.defaultProps = {
+  volume: {
+    muted: false,
+    level: 0.8,
+  },
+}
+
 
 function Button({ icon, onClick, forwardedRef }) {
   const css = {
@@ -33,15 +44,12 @@ const ButtonControl = forwardRef((props, forwardedRef) => {
   return <Button {...props} forwardedRef={forwardedRef} />
 })
 
-SoundBar.defaultProps = {
-  volume: {
-    muted: false,
-    level: 0.8,
-  },
-}
 
-function SoundBar(props) {
-  const { volume } = props
+
+function SoundBar({playerStore}) {
+
+  let muted=playerStore.volumeState.muted
+  let level =playerStore.volumeState.level
 
   return (
     <Flex justifyContent="flex-end">
@@ -56,8 +64,12 @@ function SoundBar(props) {
           </Box>
           <Box>
             <ButtonControl
-              icon={volume.muted ? 'volume-mute' : 'volume-up'}
-              onClick={() => {}}
+              icon={muted ? 'volume-mute' : 'volume-up'}
+              onClick={() => { 
+
+                playerStore.setMuted()
+
+               }}
             />
           </Box>
           <Box
@@ -84,7 +96,7 @@ function SoundBar(props) {
                     borderRadius: '5px',
                   },
                 }}
-                value={volume.level}
+                value={level}
                 max={1}
               />
               <input
@@ -105,10 +117,16 @@ function SoundBar(props) {
                 min={0}
                 max={1}
                 step="any"
-                value={volume.level}
+                value={level}
                 onClick={() => {}}
                 onMouseDown={() => {}}
-                onChange={() => {}}
+                onChange={(e) => {
+
+                  let position = e.target.value
+                  let l=Number(position).toFixed(2)
+                  playerStore.setSound(l)
+    
+                }}
                 onMouseUp={() => {}}
               />
             </div>
@@ -119,4 +137,3 @@ function SoundBar(props) {
   )
 }
 
-export default SoundBar

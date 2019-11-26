@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import ReactDOM from 'react-dom'
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome'
 import { Flex, Box } from '@grid'
 import colors from '@features/_ui/colors'
@@ -20,7 +21,7 @@ function SongListItem({playnumber, track,playerStore }) {
   }
 
   return (
-    <Box
+    <Box id={playnumber}
       width={1}
       css={{
         '&:hover': {

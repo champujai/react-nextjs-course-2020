@@ -1,34 +1,38 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Flex, Box } from '@grid'
-
+import { convertSecondsToMinutes } from '@features/player/utilities'
 import playerStore from '@features/player/store'
-import {inject} from '@lib/store'
+import { inject } from '@lib/store'
 export default inject('playerStore')(ProgressBar)
 
 
 ProgressBar.defaultProps = {
   timeElapsed: '0:00',
-  progress: '0',
+  progress: '0.8',
   duration: '0:30',
 }
 
-function zeroPad(num, places) {
-  return String(num).padStart(places, '0')
-}
 
 
-function ProgressBar({playerStore},props) {
+function ProgressBar({ playerStore }, props) {
+
   let { timeElapsed, progressTime, duration } = props
-  duration='0:30'
-  let currentSec=playerStore.currentSec;
-  progressTime=(currentSec/520)
-  let templ=Math.round((currentSec/17.3))
-  timeElapsed=`0:${zeroPad(templ, 2)}`
+
+
+
+  if (playerStore.currentSec != 0) {
+
+    let player = playerStore.playerState
+    progressTime = player.current.getCurrentTime() / player.current.getDuration()
+    duration = convertSecondsToMinutes(player.current.getDuration())
+    timeElapsed = convertSecondsToMinutes(player.current.getCurrentTime())
+
+  }
+
 
 
   return (
     <Flex
-      justifyContent="space-between"
       css={{
         background: 'transparent',
         height: '20px',
@@ -66,6 +70,7 @@ function ProgressBar({playerStore},props) {
               appearance: 'none',
               position: 'absolute',
               width: '100%',
+              cursor: 'pointer',
               height: '4px',
               outline: 'none',
               background: 'transparent',
@@ -78,10 +83,25 @@ function ProgressBar({playerStore},props) {
             max={1}
             step="any"
             value={progressTime}
-            onClick={() => {}}
-            onMouseDown={() => {}}
-            onChange={() => {}}
-            onMouseUp={() => {}}
+            onClick={() => { }}
+            onMouseDown={(e) => {
+
+              let position = e.target.value
+              let seekto = Math.round(position * playerStore.playerState.current.getDuration())
+              playerStore.playerState.current.seekTo(seekto)
+
+
+            }}
+            onChange={(e) => {
+              let position = e.target.value
+              let seekto = Math.round(position * playerStore.playerState.current.getDuration())
+              playerStore.playerState.current.seekTo(seekto)
+
+
+            }}
+            onMouseUp={() => {
+
+            }}
           />
         </div>
       </Box>

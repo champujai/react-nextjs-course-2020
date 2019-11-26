@@ -1,58 +1,58 @@
-import {observable,action}  from 'mobx'
+import { observable, action } from 'mobx'
 
 export default class PlayerStore {
 
+  listPlaying = {}
 
-  listPlaying={}
-
-  listAddPlayList={
-    'tracks':[]
+  listAddPlayList = {
+    'tracks': []
   }
 
-  currentNumber=0
+  @observable
+  currentNumber = 0
 
   @observable
-  repeatState=0
+  repeatState = 0
 
   @observable
-  randomState=0
+  randomState = 0
 
   @observable
-  currentSec=0
-
-  nextPlaying = {
-    playing: true,
-    title: 'ไกลแค่ไหน คือ ใกล้',
-    subTitle: 'Getsunova',
-    image: 'https://i.scdn.co/image/ab67616d0000b273e76e64aa449965dd5e439c53',
-    url:
-      'https://p.scdn.co/mp3-preview/f0521c21357ae522872b59cf4dd082ad65880fe8?cid=e4abb1ea8fdf4926a463960abd146fcb',
-  }
+  currentSec = 0
 
 
   @observable
   nowPlaying = {
-    playing: true,
+    playing: false,
     title: 'ไกลแค่ไหน คือ ใกล้',
     subTitle: 'Getsunova',
     image: 'https://i.scdn.co/image/ab67616d0000b273e76e64aa449965dd5e439c53',
     url:
       'https://p.scdn.co/mp3-preview/f0521c21357ae522872b59cf4dd082ad65880fe8?cid=e4abb1ea8fdf4926a463960abd146fcb',
   }
- 
+
+  @observable
+  playerState = {}
+
+  @observable
+  volumeState= {
+    muted: false,
+    level: 0.8,
+  }
 
 
-  setPlaylist(tracks){
-    this.listPlaying=tracks
+
+  setPlaylist(tracks) {
+    this.listPlaying = tracks
   }
 
 
   @action
-  play(track,playnumber=0) {
+  play(track, playnumber = 0) {
 
 
     this.resetTime()
-    this.currentNumber=playnumber;
+    this.currentNumber = playnumber;
     const { previewUrl, name, artist, image } = track
     this.nowPlaying.playnumber = playnumber
     this.nowPlaying.playing = true
@@ -66,16 +66,16 @@ export default class PlayerStore {
   }
 
 
-  playCustom(repeat){
+  playCustom(repeat) {
 
     const { previewUrl, name, artist, image } = this.listPlaying[this.currentNumber]
-    this.nowPlaying.playnumber =  this.currentNumber
+    this.nowPlaying.playnumber = this.currentNumber
     this.nowPlaying.playing = true
     this.nowPlaying.title = name
     this.nowPlaying.subTitle = artist
     this.nowPlaying.image = image
-    
-    if(repeat==1) this.nowPlaying.url = `${previewUrl}#${Math.random()}`
+
+    if (repeat == 1) this.nowPlaying.url = `${previewUrl}#${Math.random()}`
     else this.nowPlaying.url = previewUrl
 
   }
@@ -84,91 +84,88 @@ export default class PlayerStore {
   @action
   playtoggle() {
 
-    if(this.nowPlaying.playing)  this.nowPlaying.playing=false
-    else this.nowPlaying.playing=true
+    if (this.nowPlaying.playing) this.nowPlaying.playing = false
+    else this.nowPlaying.playing = true
     console.log(' Playing state:', this.nowPlaying.playing)
   }
 
 
   @action
-  checkstate(){
+  checkstate() {
     console.log(' checking state:', this.nowPlaying.playing)
     return this.nowPlaying.playing
   }
 
-  resetTime(){
-    this.currentSec=0
+  resetTime() {
+    this.currentSec = 0
   }
 
   @action
-  getSec(){
+  getSec() {
     return this.currentSec
   }
 
   @action
-  setSec(sec){
+  setSec(sec) {
 
-    this.currentSec=sec
+    this.currentSec = sec
   }
 
   @action
-  setRepeat(){
-    if(this.repeatState==0)  this.repeatState=1
-    else this.repeatState=0
+  setRepeat() {
+    if (this.repeatState == 0) this.repeatState = 1
+    else this.repeatState = 0
     console.log('Repeat state:', this.repeatState)
 
   }
 
-
   @action
-  getRepeat(){
+  getRepeat() {
     return this.repeatState
   }
 
   @action
-  setRandom(){
-    if(this.randomState==0)  this.randomState=1
-    else this.randomState=0
+  setRandom() {
+    if (this.randomState == 0) this.randomState = 1
+    else this.randomState = 0
     console.log('Random state:', this.randomState)
 
   }
 
 
   @action
-  getRandom(){
+  getRandom() {
     return this.randomState
   }
 
- 
-
   @action
-  autonext(){
+  autonext() {
 
-     if(this.repeatState==1){
+    if (this.repeatState == 1) {
+
       this.resetTime()
       this.playCustom(1)
       console.log('Repeat Number:', this.currentNumber)
       console.log('Repeat Now Playing:', this.nowPlaying.title)
 
-     }else if(this.randomState==1){
+    } else if (this.randomState == 1) {
 
       this.randomplay()
-     
 
-     }else{
+    } else {
 
       this.next()
 
-     }
+    }
   }
 
   @action
-  next(){
-    
+  next() {
+
     this.resetTime()
-    this.currentNumber=parseInt(this.currentNumber)+1
-    if(this.currentNumber==this.listPlaying.length){
-      this.currentNumber=0
+    this.currentNumber = parseInt(this.currentNumber) + 1
+    if (this.currentNumber == this.listPlaying.length) {
+      this.currentNumber = 0
     }
     this.playCustom()
     console.log('Now Number:', this.currentNumber)
@@ -178,10 +175,10 @@ export default class PlayerStore {
 
 
   @action
-  randomplay(){
+  randomplay() {
 
     this.resetTime()
-    this.currentNumber= Math.floor(Math.random() * ((this.listPlaying.length-1) - 0)) + 0;
+    this.currentNumber = Math.floor(Math.random() * ((this.listPlaying.length - 1) - 0)) + 0;
     this.playCustom()
     console.log('Now Number:', this.currentNumber)
     console.log('Now Playing:', this.nowPlaying.title)
@@ -190,12 +187,12 @@ export default class PlayerStore {
 
 
   @action
-  back(){
+  back() {
 
     this.resetTime()
-    this.currentNumber=this.currentNumber-1
-    if(this.currentNumber<0){
-      this.currentNumber=0
+    this.currentNumber = this.currentNumber - 1
+    if (this.currentNumber < 0) {
+      this.currentNumber = 0
     }
     this.playCustom()
     console.log('Now Number:', this.currentNumber)
@@ -205,10 +202,10 @@ export default class PlayerStore {
 
 
   @action
-  playall(){
+  playall() {
 
     this.resetTime()
-    this.currentNumber=0
+    this.currentNumber = 0
     this.playCustom()
     console.log('Now Number:', this.currentNumber)
     console.log('Now Playing:', this.nowPlaying.title)
@@ -216,14 +213,30 @@ export default class PlayerStore {
   }
 
 
-
   @action
-  addPlayList(track){
-    console.log('add to list :',track)
+  addPlayList(track) {
+    console.log('add to list :', track)
     this.listAddPlayList.tracks.push(track)
 
   }
 
+  @action
+  addPlayer(player) {
+    this.playerState = player
+  }
+
+  @action
+  setMuted() {
+    if (this.volumeState.muted == true) this.volumeState.muted=false
+    else this.volumeState.muted=true
+    console.log('Muted state:',this.volumeState.muted)
+  }
+
+  @action
+  setSound(level) {
+    this.volumeState.level=level
+    console.log('Sound Lv :',this.volumeState.level)
+  }
 
 
 }

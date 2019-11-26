@@ -2,11 +2,9 @@ import * as API from './repository'
 
 export function getNewReleases({ token, limit }) {
 
-  /**/ 
+  
   return API.getNewReleases({ token, limit }).then((data) => {
 
-      console.log(data)
-     
       let listalbum=[]
       data.albums.items.map(function(item){
 
@@ -32,7 +30,6 @@ export function getNewReleases({ token, limit }) {
 export function getAlbumById(id, { token }) {
   return API.getAlbumById(id, { token }).then((data) => {
 
-   // console.log(data)
     
      let listsong={
       'title': data.name,
@@ -60,11 +57,7 @@ export function getAlbumById(id, { token }) {
      })
 
 
-
-
-
     listsong.tracks=inner
-
     return listsong
      
 
@@ -72,20 +65,3 @@ export function getAlbumById(id, { token }) {
   })
 }
 
-
-/*
-
- albums: [
-    {
-      id: '2Pz8VAMiGc9UW1rrbBRDuO',
-      name: 'KILL THIS LOVE',
-      images: [
-        {
-          url:
-            'https://i.scdn.co/image/ab67616d0000b273adf560d7d93b65c10b58ccda',
-        },
-      ],
-    },
-  ],
-
-  */

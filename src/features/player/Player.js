@@ -1,29 +1,38 @@
-import React from 'react'
+import React, { useRef, useEffect } from 'react'
+import ReactDom from 'react-dom'
 import ReactPlayer from 'react-player'
 import playerStore from '@features/player/store'
 
-import {inject} from '@lib/store'
+import { inject } from '@lib/store'
 export default inject('playerStore')(Player)
 
 
-function Player({playerStore}) {
+function Player({ playerStore }) {
 
   const { url, playing } = playerStore.nowPlaying
- 
+  const playerInst = useRef(null)
+  useEffect(() => {
+    playerStore.addPlayer(playerInst)
+  })
+
+  let muted=playerStore.volumeState.muted
+  let level=playerStore.volumeState.level
+
 
   return (
     <ReactPlayer
+      ref={playerInst}
       css={{ display: 'none' }}
       playing={playing}
       url={url}
       progressInterval={50}
-      volume={0.8}
-      muted={false}
+      volume={level}
+      muted={muted}
       onProgress={data => {
 
-        let currentSec=playerStore.getSec()
-        playerStore.setSec(parseInt(currentSec)+1)
-       
+
+        playerStore.setSec(playerInst.current.getCurrentTime())
+
 
       }}
       onEnded={() => {
