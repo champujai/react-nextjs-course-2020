@@ -41,25 +41,6 @@ function PlaylistListPage({ items }) {
 
 
 
-
-/*
-<Fetch service={()=>service.getMyPlaylist({token})}>
-{({data}) => {
-
-
-  data.map(playlist=>{
-    console.log(playlist)
-
-  })
-
-
-}}
-
-
-</Fetch>
-
-*/
-
   return (
 
 

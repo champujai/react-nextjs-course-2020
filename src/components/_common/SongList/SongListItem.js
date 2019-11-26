@@ -11,8 +11,7 @@ import playerStore from '@features/player/store'
 
 export default inject('playerStore')(SongListItem)
 
-function SongListItem({ track,playerStore }) {
-
+function SongListItem({playnumber, track,playerStore }) {
 
   const [hover, setHover] = useState(false)
 
@@ -45,8 +44,7 @@ function SongListItem({ track,playerStore }) {
               cursor: 'pointer',
             }}
             onClick={() => {
-              console.log('Play', track)
-              playerStore.play(track)
+              playerStore.play(track,playnumber)
             }}>
             <Icon
               icon={hover ? 'play' : 'music'}
@@ -88,7 +86,13 @@ function SongListItem({ track,playerStore }) {
               height: '30px',
               cursor: 'pointer',
             }}
-            onClick={() => {}}>
+            onClick={() => {
+
+             
+               console.log('add')
+               playerStore.addPlayList(track)
+
+            }}>
             <Icon
               icon="plus-circle"
               css={{

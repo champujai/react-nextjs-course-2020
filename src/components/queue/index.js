@@ -4,8 +4,12 @@ import { flowRight as compose } from 'lodash'
 import { useMember } from '@lib/auth'
 import withPage from '@lib/page/withPage'
 import colors from '@features/_ui/colors'
-
 import SongList from '@common/SongList'
+
+import playerStore from '@features/player/store'
+import {inject} from '@lib/store'
+export default inject('playerStore')(compose(withPage({ restricted: true }))(QueuePage))
+
 
 QueuePage.defaultProps = {
   tracks: [
@@ -39,12 +43,19 @@ QueuePage.defaultProps = {
   ],
 }
 
-function QueuePage({ tracks }) {
+function QueuePage({playerStore, tracks }) {
+
+
   const { token } = useMember()
 
   if (token === null) {
     return null
   }
+
+
+  let  playlistDisplay = playerStore.listAddPlayList
+ 
+
 
   return (
     <Flex flexWrap="wrap" css={{ padding: '60px 120px' }}>
@@ -59,10 +70,13 @@ function QueuePage({ tracks }) {
         </h1>
       </Box>
       <Box width={1}>
-        <SongList tracks={tracks} />
+
+        <SongList tracks={playlistDisplay.tracks} />
+
+
+
       </Box>
     </Flex>
   )
 }
 
-export default compose(withPage({ restricted: true }))(QueuePage)

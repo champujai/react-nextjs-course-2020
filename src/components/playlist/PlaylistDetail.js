@@ -54,6 +54,7 @@ PlaylistDetailPage.defaultProps = {
   },
 }
 
+
 function PlaylistDetailPage({ data }) {
   const { token } = useMember()
 

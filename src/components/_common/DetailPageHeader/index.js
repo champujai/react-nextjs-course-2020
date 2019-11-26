@@ -3,7 +3,13 @@ import { Flex, Box } from '@grid'
 import Button from '@common/Button'
 import colors from '@features/_ui/colors'
 
-export default function DetailPageHeader({ data }) {
+import {inject} from '@lib/store'
+import playerStore from '@features/player/store'
+
+export default inject('playerStore')(DetailPageHeader)
+
+
+function DetailPageHeader({playerStore, data }) {
   return (
     <Flex flexWrap="wrap" css={{ padding: '20px 70px' }}>
       <Box width={1}>
@@ -23,7 +29,14 @@ export default function DetailPageHeader({ data }) {
             {data.subTitle}
           </p>
           <p>
-            <Button>Play</Button>
+            <Button  onClick={() => {
+
+             
+          console.log('play all')
+          playerStore.playall()
+
+         }}>
+        Play</Button>
           </p>
           <p css={{ paddingTop: '15px', fontSize: '0.7em' }}>
             {data.bottomLine}

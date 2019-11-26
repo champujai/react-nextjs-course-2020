@@ -3,13 +3,13 @@ import ReactPlayer from 'react-player'
 import playerStore from '@features/player/store'
 
 import {inject} from '@lib/store'
-
 export default inject('playerStore')(Player)
 
 
 function Player({playerStore}) {
 
   const { url, playing } = playerStore.nowPlaying
+ 
 
   return (
     <ReactPlayer
@@ -19,9 +19,15 @@ function Player({playerStore}) {
       progressInterval={50}
       volume={0.8}
       muted={false}
-      onProgress={data =>  null}
+      onProgress={data => {
+
+        let currentSec=playerStore.getSec()
+        playerStore.setSec(parseInt(currentSec)+1)
+       
+
+      }}
       onEnded={() => {
-        console.log('onEnded')
+        playerStore.autonext()
       }}
     />
   )

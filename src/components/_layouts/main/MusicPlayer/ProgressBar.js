@@ -1,14 +1,30 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Flex, Box } from '@grid'
+
+import playerStore from '@features/player/store'
+import {inject} from '@lib/store'
+export default inject('playerStore')(ProgressBar)
+
 
 ProgressBar.defaultProps = {
   timeElapsed: '0:00',
-  progress: 0.2,
+  progress: '0',
   duration: '0:30',
 }
 
-function ProgressBar(props) {
-  const { timeElapsed, progress, duration } = props
+function zeroPad(num, places) {
+  return String(num).padStart(places, '0')
+}
+
+
+function ProgressBar({playerStore},props) {
+  let { timeElapsed, progressTime, duration } = props
+  duration='0:30'
+  let currentSec=playerStore.currentSec;
+  progressTime=(currentSec/520)
+  let templ=Math.round((currentSec/17.3))
+  timeElapsed=`0:${zeroPad(templ, 2)}`
+
 
   return (
     <Flex
@@ -42,7 +58,7 @@ function ProgressBar(props) {
                 borderRadius: '5px',
               },
             }}
-            value={progress}
+            value={progressTime}
             max={1}
           />
           <input
@@ -61,7 +77,7 @@ function ProgressBar(props) {
             min={0}
             max={1}
             step="any"
-            value={progress}
+            value={progressTime}
             onClick={() => {}}
             onMouseDown={() => {}}
             onChange={() => {}}
@@ -74,4 +90,3 @@ function ProgressBar(props) {
   )
 }
 
-export default ProgressBar

@@ -1,7 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Flex, Box } from '@grid'
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome'
 import colors from '@features/_ui/colors'
+
+
+import playerStore from '@features/player/store'
+import {inject} from '@lib/store'
+export default inject('playerStore')(ControlPanel)
+
 
 function ButtonControl({ icon, circle = false, active = false, onClick }) {
   const css = {
@@ -30,25 +36,75 @@ function ButtonControl({ icon, circle = false, active = false, onClick }) {
 }
 
 function ControlPanel({ playerStore }) {
+
+  let playbutton='play'
+  let repeatbutton='redo-alt'
+  const { playing } = playerStore.nowPlaying
+  let repeatmode=playerStore.repeatState
+
+  if(playing){
+     playbutton='play'
+  }else{
+    playbutton='pause'
+  }
+  
+  if(repeatmode==1){
+    repeatbutton='plus-circle'
+ }else{
+  repeatbutton='redo-alt'
+ }
+ 
+
+
   return (
     <Flex>
       <Box>
-        <ButtonControl icon="random" active={false} onClick={() => {}} />
+        <ButtonControl icon="random" active={false} onClick={() => {
+
+              playerStore.randomplay()
+
+        }} />
       </Box>
       <Box>
-        <ButtonControl icon="step-backward" onClick={() => {}} />
+        <ButtonControl icon="step-backward" onClick={() => {
+
+               playerStore.back()
+
+        }} />
       </Box>
       <Box>
-        <ButtonControl icon="play" circle={true} onClick={() => {}} />
+        <ButtonControl icon={playbutton} circle={true} onClick={() => {
+
+               /*
+let  playstate =playerStore.checkstate()
+               if(playstate){
+                 setPlaybutton('pause')
+                }else{
+                 setPlaybutton('play');
+                }
+                */
+
+               playerStore.playtoggle()
+
+        }} />
       </Box>
       <Box>
-        <ButtonControl icon="step-forward" onClick={() => {}} />
+        <ButtonControl icon="step-forward" onClick={() => {
+
+                  playerStore.next()
+
+
+        }} />
       </Box>
       <Box>
-        <ButtonControl icon="redo-alt" active={false} onClick={() => {}} />
+        <ButtonControl icon={repeatbutton} active={false} onClick={() => {
+
+                   playerStore.setRepeat()
+
+        }} />
       </Box>
     </Flex>
   )
 }
 
-export default ControlPanel
+
